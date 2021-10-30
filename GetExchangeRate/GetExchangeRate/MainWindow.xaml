@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GetExchangeRate"
         mc:Ignorable="d"
-        Title="Получить курс валют" Height="150" Width="400" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Loaded="Window_Loaded" Closing="Window_Closing">
+        Title="Получить курс валют" Height="130" Width="400" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Loaded="Window_Loaded" Closing="Window_Closing">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -18,9 +18,9 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <ComboBox FontWeight="Bold" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" x:Name="ComboBox_Сurrency_1" Width="80" Height="30" Margin="4" HorizontalAlignment="Right" SelectionChanged="ComboBox_Сurrency_1_SelectionChanged"/>
-            <Label Content="=>" Grid.Column="1" FontWeight="Bold" FontSize="19" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+            <Label Content="/" Grid.Column="1" FontWeight="Bold" FontSize="19" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
             <ComboBox FontWeight="Bold" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.Column="2" x:Name="ComboBox_Сurrency_2" Width="80" Height="30" Margin="4" HorizontalAlignment="Left" SelectionChanged="ComboBox_Сurrency_2_SelectionChanged"/>
         </Grid>
-        <Button x:Name="Button_GetExchangeRate" Grid.Row="1" Width="100" Height="30" Content="Получить курс" Margin="4" FontWeight="Bold" Click="Button_GetExchangeRate_Click"/>
+        <Button x:Name="Button_GetExchangeRate" Grid.Row="1" Width="140" Height="30" Content="Получить курс валют" Margin="4" FontWeight="Bold" Click="Button_GetExchangeRate_Click"/>
     </Grid>
 </Window>
