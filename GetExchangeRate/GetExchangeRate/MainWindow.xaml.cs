@@ -27,11 +27,20 @@ namespace GetExchangeRate
     public partial class MainWindow : Window
     {
         private Dictionary<string, string[]> _dictVal = new Dictionary<string, string[]>();
-        private DB _dataBase = new DB(serv:"MYSQLSERVER\\MYSQLSERVER", log:"sa", psw:"Gfhjkm123", db:"TESTDB");
+        private DB _dataBase = null;
 
         public MainWindow()
         {
             InitializeComponent();
+            try
+            {
+               _dataBase = new DB(serv: "MYSQLSERVER\\MYSQLSERVER", log: "sa", psw: "Gfhjkm123", db: "TESTDB");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"{ex.Message}\n\nПриложение будет закрыто!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                Close();
+            }
         }
 
         private void saveSettings()
@@ -63,10 +72,8 @@ namespace GetExchangeRate
         {
             try
             {
-                // Адрес сайта с курсом валюты
                 string url = "https://www.cbr-xml-daily.ru/daily_utf8.xml";
 
-                // XML сайта с курсом валюты
                 XmlDocument documentXML = new XmlDocument();
                 documentXML.LoadXml(myClasses.getBodyHTML(url));
                 XmlElement root = documentXML.DocumentElement;
@@ -117,8 +124,8 @@ namespace GetExchangeRate
 
             string query = $"INSERT INTO [dbo].[history] ([dt], [currencyPair], [value]) VALUES(N'{DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss").Replace(" ", "T")}', N'{nameVal1}/{nameVal2}', N'{valueVal2.ToString().Replace(",", ".")}')";
             int countRow = _dataBase.execQuery(query);
-
-            MessageBox.Show($"Согласно ЦБ РФ на {DateTime.Now}:\n\n1 {nameVal1} = {valueVal2} {nameVal2}", "Информация", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+            if(countRow > 0)
+                MessageBox.Show($"Согласно ЦБ РФ на {DateTime.Now}:\n\n1 {nameVal1} = {valueVal2} {nameVal2}", "Информация", MessageBoxButton.OK, MessageBoxImage.Asterisk);
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
