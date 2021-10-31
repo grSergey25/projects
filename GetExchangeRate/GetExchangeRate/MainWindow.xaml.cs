@@ -28,6 +28,7 @@ namespace GetExchangeRate
     {
         private Dictionary<string, string[]> _dictVal = new Dictionary<string, string[]>();
         private DB _dataBase = null;
+        private string _url = "https://www.cbr-xml-daily.ru/daily_utf8.xml";
 
         public MainWindow()
         {
@@ -38,68 +39,65 @@ namespace GetExchangeRate
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"{ex.Message}\n\nПриложение будет закрыто!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"{ex.Message}\n\nПриложение будет закрыто!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Stop);
                 Close();
             }
         }
 
         private void saveSettings()
         {
-            Properties.Settings.Default.Сurrency_1 = ((Label)ComboBox_Сurrency_1.SelectedItem).Content.ToString();
-            Properties.Settings.Default.Сurrency_2 = ((Label)ComboBox_Сurrency_2.SelectedItem).Content.ToString();
+            try
+            {
+                if (ComboBox_Сurrency_1.SelectedIndex != -1)
+                    Properties.Settings.Default.Сurrency_1 = ((Label)ComboBox_Сurrency_1.SelectedItem).Content.ToString();
+                if (ComboBox_Сurrency_2.SelectedIndex != -1)
+                    Properties.Settings.Default.Сurrency_2 = ((Label)ComboBox_Сurrency_2.SelectedItem).Content.ToString();
 
-            Properties.Settings.Default.Save();
+                Properties.Settings.Default.Save();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"{ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Stop);
+            }
         }
+        
         private void loadSettings()
         {
-            if(Properties.Settings.Default.Сurrency_1 != "")
-                foreach (Label it in ComboBox_Сurrency_1.Items)
-                    if (it.Content.ToString() == Properties.Settings.Default.Сurrency_1)
-                    {
-                        ComboBox_Сurrency_1.SelectedItem = it;
-                        break;
-                    }
-            if (Properties.Settings.Default.Сurrency_2 != "")
-                foreach (Label it in ComboBox_Сurrency_2.Items)
-                    if (it.Content.ToString() == Properties.Settings.Default.Сurrency_2)
-                    {
-                        ComboBox_Сurrency_2.SelectedItem = it;
-                        break;
-                    }
+            try
+            {
+                if (Properties.Settings.Default.Сurrency_1 != "")
+                    foreach (Label it in ComboBox_Сurrency_1.Items)
+                        if (it.Content.ToString() == Properties.Settings.Default.Сurrency_1)
+                        {
+                            ComboBox_Сurrency_1.SelectedItem = it;
+                            break;
+                        }
+                if (Properties.Settings.Default.Сurrency_2 != "")
+                    foreach (Label it in ComboBox_Сurrency_2.Items)
+                        if (it.Content.ToString() == Properties.Settings.Default.Сurrency_2)
+                        {
+                            ComboBox_Сurrency_2.SelectedItem = it;
+                            break;
+                        }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"{ex.Message}\n\nПриложение будет закрыто!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Stop);
+                Close();
+            }
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             try
             {
-                string url = "https://www.cbr-xml-daily.ru/daily_utf8.xml";
-
-                XmlDocument documentXML = new XmlDocument();
-                documentXML.LoadXml(myClasses.getBodyHTML(url));
-                XmlElement root = documentXML.DocumentElement;
-
-                ComboBox_Сurrency_1.Items.Add(new Label { Content = "RUB", ToolTip = "Российский рубль" });
-                ComboBox_Сurrency_2.Items.Add(new Label { Content = "RUB", ToolTip = "Российский рубль" });
-
-                _dictVal.Add("RUB", new string[] { "Российский рубль", "1" });
-
-                foreach (XmlNode val in root.ChildNodes)
-                {
-                    string charVal = val.ChildNodes[1].InnerText;
-                    string nameVal = val.ChildNodes[3].InnerText;
-                    string value = val.ChildNodes[4].InnerText;
-
-                    _dictVal.Add(charVal, new string[] { nameVal, value });
-
-                    ComboBox_Сurrency_1.Items.Add(new Label { Content = charVal, ToolTip = nameVal });
-                    ComboBox_Сurrency_2.Items.Add(new Label { Content = charVal, ToolTip = nameVal });
-                }
+                GetExchanges();
 
                 loadSettings();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"{ex.Message}\n\nПриложение будет закрыто!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"{ex.Message}\n\nПриложение будет закрыто!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Stop);
                 Close();
             }
         }
@@ -114,8 +112,81 @@ namespace GetExchangeRate
             ((ComboBox)sender).ToolTip = _dictVal[((Label)((ComboBox)sender).SelectedItem).Content.ToString()][0];
         }
 
+        private void UpdateRate()
+        {
+            try
+            {
+                XmlElement root = GetXMLRootFromURL();
+
+                if (root == null)
+                {
+                    MessageBox.Show($"Не удлалось получить инфромацию с Web-страницы ЦБ РФ.\n\nПриложение будет закрыто!", "Внимание", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    Close();
+                }
+
+                foreach (XmlNode val in root.ChildNodes)
+                    _dictVal[val.ChildNodes[1].InnerText][1] = val.ChildNodes[4].InnerText;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"{ex.Message}\n\nПриложение будет закрыто!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Stop);
+                Close();
+            }
+        }
+
+        private XmlElement GetXMLRootFromURL()
+        {
+            try
+            {
+                XmlDocument documentXML = new XmlDocument();
+                documentXML.LoadXml(myClasses.getBodyHTML(_url));
+                return documentXML.DocumentElement;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        private void GetExchanges()
+        {
+            try
+            {
+                XmlElement root = GetXMLRootFromURL();
+
+                if (root == null)
+                {
+                    MessageBox.Show($"Не удлалось получить инфромацию с Web-страницы ЦБ РФ.\n\nПриложение будет закрыто!", "Внимание", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                    Close();
+                }
+
+                ComboBox_Сurrency_1.Items.Add(new Label { Content = "RUB", ToolTip = "Российский рубль" });
+                ComboBox_Сurrency_2.Items.Add(new Label { Content = "RUB", ToolTip = "Российский рубль" });
+
+                _dictVal.Add("RUB", new string[] { "Российский рубль", "1" });
+
+                foreach (XmlNode val in root.ChildNodes)
+                {
+                    string charVal = val.ChildNodes[1].InnerText;
+                    string nameVal = val.ChildNodes[3].InnerText;
+
+                    _dictVal.Add(charVal, new string[] { nameVal, "" });
+
+                    ComboBox_Сurrency_1.Items.Add(new Label { Content = charVal, ToolTip = nameVal });
+                    ComboBox_Сurrency_2.Items.Add(new Label { Content = charVal, ToolTip = nameVal });
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"{ex.Message}\n\nПриложение будет закрыто!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Stop);
+                Close();
+            }
+        }
+
         private void Button_GetExchangeRate_Click(object sender, RoutedEventArgs e)
         {
+            UpdateRate();
+
             string nameVal1 = ((Label)ComboBox_Сurrency_1.SelectedItem).Content.ToString();
             double valueVal1 = Convert.ToDouble(_dictVal[nameVal1][1]);
 

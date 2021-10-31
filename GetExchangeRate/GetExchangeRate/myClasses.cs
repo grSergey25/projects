@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Net;
 using System.IO;
+using System.Windows;
 
 namespace GetExchangeRate
 {
@@ -60,6 +61,7 @@ namespace GetExchangeRate
             }
             catch (Exception ex)
             {
+                MessageBox.Show($"{ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Stop);
                 return -1;
             }
         }
