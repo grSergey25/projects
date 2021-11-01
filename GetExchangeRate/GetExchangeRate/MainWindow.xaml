@@ -5,22 +5,60 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GetExchangeRate"
         mc:Ignorable="d"
-        Title="Получить курс валют" Height="130" Width="400" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Loaded="Window_Loaded" Closing="Window_Closing">
+        Title="Получить курс валют" Height="200" Width="600" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Loaded="Window_Loaded" Closing="Window_Closing">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-        <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="0.8*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Margin="2">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <ComboBox FontWeight="Bold" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" x:Name="ComboBox_Сurrency_1" Width="80" Height="30" Margin="4" HorizontalAlignment="Right" SelectionChanged="ComboBox_Сurrency_1_SelectionChanged"/>
+                <Label Content="/" Grid.Column="1" FontWeight="Bold" FontSize="19" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+                <ComboBox FontWeight="Bold" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.Column="2" x:Name="ComboBox_Сurrency_2" Width="80" Height="30" Margin="4" HorizontalAlignment="Left" SelectionChanged="ComboBox_Сurrency_2_SelectionChanged"/>
+            </Grid>
+            <Separator Grid.Row="1" Grid.ColumnSpan="2"/>
+            <Button IsEnabled="False" x:Name="Button_GetExchangeRate" Grid.Row="2" Width="140" Height="30" Content="Получить курс валют" Margin="4" FontWeight="Bold" Click="Button_GetExchangeRate_Click"/>
+        </Grid>
+        <Border BorderThickness="0.4" BorderBrush="Gray" Grid.Column="1"/>
+        <Grid Grid.Column="2" Margin="2">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="0.6*"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <ComboBox FontWeight="Bold" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" x:Name="ComboBox_Сurrency_1" Width="80" Height="30" Margin="4" HorizontalAlignment="Right" SelectionChanged="ComboBox_Сurrency_1_SelectionChanged"/>
-            <Label Content="/" Grid.Column="1" FontWeight="Bold" FontSize="19" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
-            <ComboBox FontWeight="Bold" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.Column="2" x:Name="ComboBox_Сurrency_2" Width="80" Height="30" Margin="4" HorizontalAlignment="Left" SelectionChanged="ComboBox_Сurrency_2_SelectionChanged"/>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Label Grid.ColumnSpan="2" Content="Парметры БД:" FontStyle="Italic" FontSize="12" FontWeight="Bold" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+            <Separator Grid.Row="1" Grid.ColumnSpan="2"/>
+            <Label Grid.Row="2"  Content="Сервер:" FontSize="12" FontStyle="Italic" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
+            <Label Grid.Row="3"  Content="БД:" FontSize="12" FontStyle="Italic" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
+            <Label Grid.Row="4"  Content="Логин:" FontSize="12" FontStyle="Italic" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
+            <Label Grid.Row="5"  Content="Пароль:" FontSize="12" FontStyle="Italic" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
+            <TextBox VerticalContentAlignment="Center" Text="MYSQLSERVER\MYSQLSERVER" x:Name="TextBox_serv" Grid.Row="2" Grid.Column="1" Margin="2" FontSize="12" FontWeight="Bold"/>
+            <TextBox VerticalContentAlignment="Center" Text="TESTDB" x:Name="TextBox_db" Grid.Row="3" Grid.Column="1" Margin="2" FontSize="12" FontWeight="Bold"/>
+            <TextBox VerticalContentAlignment="Center" Text="sa" x:Name="TextBox_log" Grid.Row="4" Grid.Column="1" Margin="2" FontSize="12" FontWeight="Bold"/>
+            <PasswordBox Password="Gfhjkm123" VerticalContentAlignment="Center" x:Name="PasswordBox_psw" Grid.Row="5" Grid.Column="1" Margin="2" FontSize="12" FontWeight="Bold"/>
+            <Separator Grid.Row="6" Grid.ColumnSpan="2"/>
+            <Button x:Name="Button_ConnectDB" Grid.Row="7" Margin="2" Content="Подключиться" FontSize="12" FontWeight="Bold" Grid.ColumnSpan="2" Width="100" Click="Button_ConnectDB_Click"/>
         </Grid>
-        <Button x:Name="Button_GetExchangeRate" Grid.Row="1" Width="140" Height="30" Content="Получить курс валют" Margin="4" FontWeight="Bold" Click="Button_GetExchangeRate_Click"/>
     </Grid>
 </Window>

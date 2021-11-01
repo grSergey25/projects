@@ -35,7 +35,7 @@ namespace GetExchangeRate
             InitializeComponent();
             try
             {
-               _dataBase = new DB(serv: "MYSQLSERVER\\MYSQLSERVER", log: "sa", psw: "Gfhjkm123", db: "TESTDB");
+
             }
             catch (Exception ex)
             {
@@ -52,6 +52,11 @@ namespace GetExchangeRate
                     Properties.Settings.Default.Сurrency_1 = ((Label)ComboBox_Сurrency_1.SelectedItem).Content.ToString();
                 if (ComboBox_Сurrency_2.SelectedIndex != -1)
                     Properties.Settings.Default.Сurrency_2 = ((Label)ComboBox_Сurrency_2.SelectedItem).Content.ToString();
+
+                Properties.Settings.Default.serv = TextBox_serv.Text;
+                Properties.Settings.Default.db = TextBox_db.Text;
+                Properties.Settings.Default.log = TextBox_log.Text;
+                Properties.Settings.Default.psw = PasswordBox_psw.Password;
 
                 Properties.Settings.Default.Save();
             }
@@ -79,6 +84,14 @@ namespace GetExchangeRate
                             ComboBox_Сurrency_2.SelectedItem = it;
                             break;
                         }
+                if (Properties.Settings.Default.serv != "")
+                    TextBox_serv.Text = Properties.Settings.Default.serv;
+                if (Properties.Settings.Default.db != "")
+                    TextBox_db.Text = Properties.Settings.Default.db;
+                if (Properties.Settings.Default.log != "")
+                    TextBox_log.Text = Properties.Settings.Default.log;
+                if (Properties.Settings.Default.psw != "")
+                    PasswordBox_psw.Password = Properties.Settings.Default.psw;
             }
             catch (Exception ex)
             {
@@ -202,6 +215,21 @@ namespace GetExchangeRate
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             saveSettings();
+        }
+
+        private void Button_ConnectDB_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                _dataBase = new DB(serv: TextBox_serv.Text, log: TextBox_log.Text, psw: PasswordBox_psw.Password, db: TextBox_db.Text);
+                Button_GetExchangeRate.IsEnabled = true;
+                MessageBox.Show($"Подключение к БД \"{TextBox_db.Text}\" успешно завершено!", "Информация", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+            }
+            catch (Exception ex)
+            {
+                Button_GetExchangeRate.IsEnabled = false;
+                MessageBox.Show($"{ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Stop);
+            }
         }
     }
 }

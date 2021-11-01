@@ -46,5 +46,53 @@ namespace GetExchangeRate.Properties {
                 this["Сurrency_2"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string serv {
+            get {
+                return ((string)(this["serv"]));
+            }
+            set {
+                this["serv"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string db {
+            get {
+                return ((string)(this["db"]));
+            }
+            set {
+                this["db"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string log {
+            get {
+                return ((string)(this["log"]));
+            }
+            set {
+                this["log"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string psw {
+            get {
+                return ((string)(this["psw"]));
+            }
+            set {
+                this["psw"] = value;
+            }
+        }
     }
 }
